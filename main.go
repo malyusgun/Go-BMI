@@ -1,18 +1,27 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"math"
 )
 
 const CENTIMETERS_PER_METER = 100
 const HEIGHT_POWER = 2
+const MIN_WEIGHT = 30
+const MIN_HEIGHT = 100
 
 func main() {
 	fmt.Println("__BMI calculator__")
 
 	for {
-		userWeight, userHeight := getUserParams()
+		userWeight, userHeight, error := getUserParams()
+
+		if error != nil {
+			fmt.Println(error)
+			continue
+		}
+
 		BMI := userWeight / math.Pow(userHeight/CENTIMETERS_PER_METER, HEIGHT_POWER)
 
 		outputResult(BMI)
@@ -46,17 +55,25 @@ func outputResult(BMI float64) {
 	}
 }
 
-func getUserParams() (float64, float64) {
+func getUserParams() (float64, float64, error) {
 	var weight float64
 	var height float64
 
 	fmt.Print("Enter your weight: ")
 	fmt.Scan(&weight)
 
+	if weight <= MIN_WEIGHT {
+		return 0, 0, errors.New("Wrong weight input.")
+	}
+
 	fmt.Print("Enter your height: ")
 	fmt.Scan(&height)
 
-	return weight, height
+	if height <= MIN_HEIGHT {
+		return 0, 0, errors.New("Wrong height input.")
+	}
+
+	return weight, height, nil
 }
 
 func checkIsRepeatCalculation() bool {
