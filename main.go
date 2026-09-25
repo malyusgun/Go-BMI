@@ -11,10 +11,18 @@ const HEIGHT_POWER = 2
 func main() {
 	fmt.Println("__BMI calculator__")
 
-	userWeight, userHeight := getUserParams()
-	BMI := userWeight / math.Pow(userHeight/CENTIMETERS_PER_METER, HEIGHT_POWER)
+	for {
+		userWeight, userHeight := getUserParams()
+		BMI := userWeight / math.Pow(userHeight/CENTIMETERS_PER_METER, HEIGHT_POWER)
 
-	outputResult(BMI)
+		outputResult(BMI)
+
+		isRepeat := checkIsRepeatCalculation()
+
+		if !isRepeat {
+			break
+		}
+	}
 }
 
 func outputResult(BMI float64) {
@@ -49,4 +57,13 @@ func getUserParams() (float64, float64) {
 	fmt.Scan(&height)
 
 	return weight, height
+}
+
+func checkIsRepeatCalculation() bool {
+	var enter string
+
+	fmt.Println("Would you like to continue? (y/n)")
+	fmt.Scan(&enter)
+
+	return enter == "y" || enter == "Y"
 }
